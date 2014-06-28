@@ -4,6 +4,7 @@
             [goog.dom :as gdom]
             [coinalarm.phone :as phone]
             [sablono.core :as html :refer-macros [html]]
+            [coinalarm.markets :as markets]
             [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true])
   (:import [goog.net XhrIo]
