@@ -2,6 +2,7 @@
   (:require [cljs.reader :as reader]
             [goog.events :as events]
             [goog.dom :as gdom]
+            [coinalarm.phone :as phone]
             [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true])
   (:import [goog.net XhrIo]
@@ -9,5 +10,3 @@
            [goog.events EventType]))
 
 (enable-console-print!)
-
-(println "Hello world!")
