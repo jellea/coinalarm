@@ -16,6 +16,8 @@
                  [http-kit "2.1.16"]
                  [org.clojure/data.json "0.2.5"]
                  [com.taoensso/carmine "2.6.2"]]
+                 [sablono "0.2.17"]
+                 [fogus/ring-edn "0.2.0"]]
 
   :plugins [[lein-cljsbuild "1.0.2"]]
 

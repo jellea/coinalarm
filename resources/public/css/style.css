@@ -1,0 +1,132 @@
+html, body{
+  height:100%;
+  margin:0;
+  padding:0;
+  /*font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;*/
+  font-family: Arvo, Helvetica, Arial, sans-serif;
+  font-size: 100%;
+  color: #fff;
+  background-color: #F1F1F1;
+  overflow: hidden
+}
+
+* { box-sizing: border-box }
+
+.login {
+  position: absolute;
+  cursor: pointer;
+  font-size: 0.8em;
+  top: 10px;
+  right: 10px;
+  width: auto;
+  text-align: center;
+  background: #41B972;
+  padding: 0em 0.5em 0em 0.5em;
+  margin: 0;
+  line-height: 0.2em;
+  border-radius: 2px;
+}
+.login:hover {
+  background: #298A51;
+}
+
+.floater {
+  float:left;
+  display:block;
+  height:40%;
+  margin-bottom:-120px;
+}
+
+.container {
+  clear: both;
+  height: 400px;
+  position: relative;
+  overflow: visible;
+}
+
+#chart{
+  background: #41B972;
+  border-radius: 4px;
+  background-image: -o-linear-gradient(0deg, #41B972 0%, #298A51 40%, #298A51 58%, #41B972 100%);
+  background-image: -moz-linear-gradient(0deg, #41B972 0%, #298A51 40%, #298A51 58%, #41B972 100%);
+  background-image: -webkit-linear-gradient(0deg, #41B972 0%, #298A51 40%, #298A51 58%, #41B972 100%);
+  background-image: -ms-linear-gradient(0deg, #41B972 0%, #298A51 40%, #298A51 58%, #41B972 100%);
+  background-image: linear-gradient(-90deg, #41B972 0%, #298A51 40%, #298A51 58%, #41B972 100%);
+  position: absolute;
+  display: block;
+  z-index: 10;
+  width: 720px;
+  height: 90%;
+  margin: 20px -150px 20px -150px;
+}
+
+.front{
+  z-index: 100;
+  height: 100%;
+  width: 420px;
+  background-color: #41B972;
+  border-radius: 2px;
+  position: absolute;
+  top: 0;
+}
+
+.logo{
+  margin-top: 40px;
+}
+
+h1{
+  font-size: 2.5em;
+  line-height: 1.5em;
+  padding: 5px;
+  font-weight: normal;
+}
+
+.container{
+  text-align: center;
+  width:420px;
+  font-size: 1em;
+  line-height: 1.8em;
+  margin: auto;
+}
+
+
+.invite{
+  background-color: #fff;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding:20px;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+}
+
+input {
+  font-family: Arvo, Helvetica, Arial, sans-serif;
+  font-size: 0.8em;
+  padding: 10px;
+  border-radius: 2px;
+  border: 2px #41B972 solid;
+}
+
+input[type=email]{
+  background-color: #fff;
+  color: #298A51;
+  outline:none;
+}
+
+input[type=submit]{
+  color: #fff;
+  cursor: pointer;
+  background-color: #41B972;
+}
+input[type=submit]:hover{
+  background-color: #298A51;
+  border:2px solid #298A51;
+}
+
+.footer {
+  color: #52BF7F;
+  position:absolute;
+  bottom: 0px;
+  right: 1em;
+}
