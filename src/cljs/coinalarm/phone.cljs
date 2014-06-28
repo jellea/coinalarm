@@ -13,29 +13,39 @@
 (def app-state (atom {:number ""}))
 
 (defn send-number [e state owner]
-  (println (-> (om/get-node owner "phone-field")
-               .-value)))
+  (when (:valid state)
+    (let [phone-number (-> (om/get-node owner "phone-field")
+                           .-value)]
+      (println "sendint phone number" phone-number))))
 
 (defn validate-number [phone-number]
+  ;; TODO: validate phone no
   true)
 
 (defn handle-number [e state owner]
-  (let [phone-number (e -target -value)
-        valid (validate-number phone-number)]
-    (println "valid" valid)
-    (om/set-state! owner :number phone-number )
-    (om/set-state! owner :valid valid)))
+  (let [phone-number (.. e -target -value)
+        valid (validate-number phone-number)
+        ;; show error msg when number is filled in and invalid
+        message (and (not valid)
+                     (not (empty? phone-number)))]
+    (om/set-state! owner :number phone-number)
+    (om/set-state! owner :valid valid)
+    (om/set-state! owner :message message)))
 
 (defn phone-box [app owner]
   (reify
     om/IInitState
     (init-state [this]
       {:number ""
-       :valid false})
+       :valid false
+       :message false})
     om/IRenderState
     (render-state [this state]
       (dom/div nil
          (dom/p nil "Fill in your phone number to receive text messages")
+         ;; error message
+         (when (:message state)
+            (dom/div nil "Yo that's not a real phone number"))
          (dom/input #js {:placeholder "+47 999 999 000"
                          :ref "phone-field"
                          :onChange #(handle-number % state owner)
