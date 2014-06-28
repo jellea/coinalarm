@@ -14,10 +14,10 @@
     )
     om/IRender
     (render [_]
-      (html [:div.splashscreen
-              [:div#chart nil]
+      (html [:div
+             ;[:div#chart nil]
               [:div.front
                 [:h1 "CoinAlarm"]
                 [:h3 "Get a SMS message when its time to sell or buy Bitcoins*!"]
                 [:sub "*and alt coins"]
-                [:div {:onClick (fn [] (om/transact! cursor #(assoc % :page :phone)))} "start"]]]))))
+                [:div {:onClick (fn [] (om/transact! cursor #(assoc % :page "phoneform")))} "start"]]]))))

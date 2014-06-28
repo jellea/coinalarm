@@ -30,13 +30,6 @@ html, body{
   background: #298A51;
 }
 
-.floater {
-  float:left;
-  display:block;
-  height:40%;
-  margin-bottom:-120px;
-}
-
 .container {
   clear: both;
   height: 400px;
@@ -60,14 +53,24 @@ html, body{
   margin: 20px -150px 20px -150px;
 }
 
-.front{
-  z-index: 100;
-  height: 100%;
-  width: 420px;
+.box {
   background-color: #41B972;
   border-radius: 2px;
+  -webkit-transition: all 1s;
+}
+
+.splashscreen{
+  text-align: center;
+  height: 420px;
+  width: 420px;
   position: absolute;
-  top: 0;
+  -webkit-transform: translate3d(calc(50vw - 210px),calc(50vh - 210px),0px);
+}
+
+.phoneform {
+  height: 274px;
+  width: 420px;
+  -webkit-transform: translate3d(calc(50vw - 210px),calc(50vh - 135px),0px);
 }
 
 .logo{
@@ -79,25 +82,6 @@ h1{
   line-height: 1.5em;
   padding: 5px;
   font-weight: normal;
-}
-
-.container{
-  text-align: center;
-  width:420px;
-  font-size: 1em;
-  line-height: 1.8em;
-  margin: auto;
-}
-
-
-.invite{
-  background-color: #fff;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding:20px;
-  border-bottom-right-radius: 2px;
-  border-bottom-left-radius: 2px;
 }
 
 input {
