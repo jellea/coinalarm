@@ -12,7 +12,8 @@
                  [org.clojure/core.async "0.1.267.0-0d7780-alpha"]
                  [om "0.5.3"]
                  [compojure "1.1.6"]
-                 [fogus/ring-edn "0.2.0"]]
+                 [fogus/ring-edn "0.2.0"]
+                 [clj-http "0.9.2"]]
 
   :plugins [[lein-cljsbuild "1.0.2"]]
 
