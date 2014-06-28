@@ -10,8 +10,6 @@
 
 (enable-console-print!)
 
-
-
 (def app-state (atom {:number ""}))
 
 (defn send-number [e state owner]
@@ -48,4 +46,4 @@
 
 
 (println "Mounting phone box")
-(om/root phone-box app-state {:target (. js/document (getElementById "phone"))})
+;(om/root phone-box app-state {:target (. js/document (getElementById "phone"))})
