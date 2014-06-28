@@ -1,5 +1,6 @@
 (ns coinalarm.btc
-  (:require [clj-http.client :as client]))
+  (:require [org.httpkit.client :as client]
+            [clojure.data.json :as json]))
 
 
 (def apis
@@ -42,11 +43,23 @@
               "btcexEUR" "bidxtrmPLN" "bitaloGBP" "btcoidIDR" "justNOK" "crytrUSD" "ruxumZAR"
               "virtexCAD" "aqoinEUR" "localbtcDKK" "ibwtGBP" "bitnzNZD" "globalEUR"])
 
-(defn get-latest [{:keys [api query-params]}]
+(defn get-latest-data [{:keys [api query-params callback]}]
   (let [url (or (api apis) (:bitcoincharts apis))]
-    (:body (client/get url {:as :json :query-params query-params}))))
+    (client/get url {:query-params query-params}
+                callback)))
 
-;; (get-latest {:api :bitcoincharts})
+(defn json->dict [data]
+  (json/read-str data :key-fn keyword))
+
+(defn symbol-as-keys [data]
+  (into {} (map #(vector (:symbol %) %) data)))
+
+(defn get-latest-symbols [callback]
+  (get-latest-data {:api :bitcoincharts
+                    :callback (fn [{:keys [status headers body error]}]
+                                ((comp callback symbol-as-keys json->dict) body))}))
+
+;; (get-latest-symbols print)
 
 
 

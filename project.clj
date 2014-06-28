@@ -13,7 +13,9 @@
                  [om "0.5.3"]
                  [compojure "1.1.6"]
                  [fogus/ring-edn "0.2.0"]
-                 [clj-http "0.9.2"]]
+                 [http-kit "2.1.16"]
+                 [org.clojure/data.json "0.2.5"]
+                 [com.taoensso/carmine "2.6.2"]]
 
   :plugins [[lein-cljsbuild "1.0.2"]]
 
