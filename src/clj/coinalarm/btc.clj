@@ -61,14 +61,13 @@
 
 (defn restructure-dict [data]
   (into {} (map (fn [[f s]] (vector f (group-by :symbol s)))
-                (group-by :currency (json->dict (:body (deref (client/get (:bitcoincharts apis)))))))))
+                (group-by :currency data))))
 
 (defn get-latest-symbols [callback]
   (get-latest-data {:api :bitcoincharts
+                    :query-params {}
                     :callback (fn [{:keys [status headers body error]}]
                                 ((comp callback restructure-dict json->dict) body))}))
-
-(deref (get-latest-symbols print))
 
 
 
