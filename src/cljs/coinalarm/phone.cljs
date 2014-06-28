@@ -55,5 +55,5 @@
                             :disabled (not (:valid state))} "Done"))))))
 
 
-(println "Mounting phone box")
-;(om/root phone-box app-state {:target (. js/document (getElementById "phone"))})
+;; (println "Mounting phone box")
+;; (om/root phone-box app-state {:target (. js/document (getElementById "phone"))})

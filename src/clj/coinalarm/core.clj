@@ -15,7 +15,6 @@
    :headers {"Content-Type" "application/edn"}
    :body (pr-str data)})
 
-
 (defroutes routes
   (GET "/" [] (index))
   (route/files "/" {:root "resources/public"}))
