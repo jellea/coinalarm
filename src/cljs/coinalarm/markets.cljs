@@ -61,13 +61,16 @@
       (println (:markets state))
       (dom/div nil
          (dom/h1 nil "Great!")
-         (dom/p nil "A confirmation text has been sent")
+         (dom/p nil "A confirmation text has been sent.")
+         (dom/p nil "Let's set you up meanwhile:")
          (dom/div nil
+           (dom/p nil "What do you trade?")
            (apply dom/select #js {:ref "coin-field"
                                   :onChange #(handle-coin % state owner)
                                   :value (:coin state)}
               (map #(dom/option #js {:value (:market %)} (:name %)) (:coins state))))
          (dom/div nil
+            (dom/p nil "Where do you trade?")
             (apply dom/select #js {:ref "market-field"
                          :onChange #(handle-market % state owner)
                          :value (:market state)}
