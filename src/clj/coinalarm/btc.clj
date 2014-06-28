@@ -56,22 +56,19 @@
     (client/get url {:query-params query-params}
                 callback)))
 
-(defn get-currency-markets []
-  (into {} (map (fn [[f s]] (vector f (mapv :symbol s)))
-                (group-by :currency (json->dict (:body (deref (client/get (:bitcoincharts apis)))))))))
-
 (defn json->dict [data]
   (json/read-str data :key-fn keyword))
 
-(defn symbol-as-keys [data]
-  (into {} (map #(vector (:symbol %) %) data)))
+(defn restructure-dict [data]
+  (into {} (map (fn [[f s]] (vector f (group-by :symbol s)))
+                (group-by :currency (json->dict (:body (deref (client/get (:bitcoincharts apis)))))))))
 
 (defn get-latest-symbols [callback]
   (get-latest-data {:api :bitcoincharts
                     :callback (fn [{:keys [status headers body error]}]
-                                ((comp callback symbol-as-keys json->dict) body))}))
+                                ((comp callback restructure-dict json->dict) body))}))
 
-;; (get-latest-symbols print)
+(deref (get-latest-symbols print))
 
 
 
