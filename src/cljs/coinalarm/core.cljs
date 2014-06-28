@@ -13,9 +13,11 @@
 
 (enable-console-print!)
 
-(defn main-component []
+(def app-state (atom {:unused ""}))
+
+(defn main-component [app owner]
   (om/component
     (html [:div.container
-            [:div.front (om/build phone/phone-box nil)]])))
+            [:div.front (om/build markets/market-selector app)]])))
 
 (om/root main-component app-state {:target (. js/document (getElementById "app"))})
