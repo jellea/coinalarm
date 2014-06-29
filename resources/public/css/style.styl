@@ -1,0 +1,267 @@
+@import 'nib'
+
+green-color-1 = #41B972
+bounce-ease = cubic-bezier(.30,1.08,.18,1.08)
+
+*
+  box-sizing border-box
+
+html, body
+  height 100%
+  margin 0
+  padding 0
+  font-family Arvo, Helvetica, Arial, sans-serif
+  font-size 100%
+  color #fff
+  background-color #F1F1F1
+  overflow hidden
+
+h1, h2, h3
+  font-weight normal
+
+h1
+  font-size 2.5em
+  line-height 1.5em
+  padding 5px
+
+h3
+  padding 0 3em 0 3em
+
+select
+  background #fff
+  font-size 1em
+  color green-color-1
+  font-family Arvo, Helvetica, Arial, sans-serif
+
+input
+  border-radius 5px
+  font-family Arvo, Helvetica, Arial, sans-serif
+  font-size 0.8em
+  padding 10px
+  border 2px green-color-1 solid
+  background-color #fff
+  color #298A51
+  outlinenone
+
+input[type=submit]
+  color #fff
+  cursor pointer
+  background-color green-color-1
+
+input[type=submit]hover
+  background-color #298A51
+  border2px solid #298A51
+
+.login
+  position absolute
+  cursor pointer
+  font-size 0.8em
+  top 10px
+  right 10px
+  width auto
+  text-align center
+  background green-color-1
+  padding 0em 0.5em 0em 0.5em
+  margin 0
+  line-height 0.2em
+  border-radius 2px
+
+  &hover
+    background #298A51
+
+.footer
+  color #52BF7F
+  position absolute
+  bottom 0px
+  right 1em
+  font-size 0.9em
+
+.box
+  background-color green-color-1
+  border-radius 2px
+  transition all 0.5s bounce-ease
+
+  .box-footer
+    background-color #fff
+    position absolute
+    bottom 0px
+    width 100%
+    padding 2em
+    text-align center
+    border-radius 0px 0px 2px 2px
+    background #FFFFFF
+
+    .button
+      font-size 1em
+      border-radius 2px
+      background green-color-1
+      padding 0.7em
+      color #fff
+      text-decoration none
+
+
+@keyframes modal-fade-in
+  from
+    opacity 0
+  to
+    opacity 0.7
+
+
+@keyframes modal-appear
+  from
+    transform translate(calc(50vw - 300px), calc(50vh - 200px)) scale(0)
+  to
+    transform translate(calc(50vw - 300px), calc(50vh - 200px)) scale(1)
+
+.modal
+  .greyout
+    position absolute
+    display block
+    width 100vw
+    height 100vh
+    opacity 0.7
+    top 0px
+    left 0px
+    background-color #111
+    z-index 1000
+    cursor pointer
+    animation modal-fade-in 1s bounce-ease
+
+  .container
+    color #222
+    padding 3em
+    position absolute
+    display block
+    width 600px
+    height 400px
+    z-index 1001
+    background-color #fff
+    animation modal-appear 0.5s bounce-ease
+    transform translate(calc(50vw - 300px), calc(50vh - 200px))
+
+  &.hide
+    .greyout
+      opacity 0
+    .container
+      transform translate(calc(50vw - 300px), calc(50vh - 200px)) scale(0)
+
+/* Pages */
+
+.splashscreen
+  text-align center
+  height 420px
+  width 420px
+  position absolute
+  transform translate3d(calc(50vw - 210px), calc(50vh - 210px), 0px)
+
+  .logo
+    margin-top 40px
+
+  #chart
+    background green-color-1
+    border-radius 4px
+    background-image linear-gradient(-90deg, green-color-1 0%, #298A51 40%, #298A51 58%, green-color-1 100%)
+    position absolute
+    display block
+    z-index -10
+    width 720px
+    height 340px
+    margin -290px -150px 20px -150px
+
+  .front
+    padding-top 3em
+    z-index 12
+
+    p
+      font-size 0.7em
+      text-align right
+      padding-right 1em
+
+    .backplate
+      background-color green-color-1
+      position absolute
+      top 0
+      display block
+      height 100%
+      width 100%
+      z-index -9
+
+.phoneform, .phoneconfirm
+  height 274px
+  width 420px
+  text-align center
+  transform translate3d(calc(50vw - 210px),calc(50vh - 135px),0px)
+
+  > div
+    padding-top 1em
+
+
+  input
+    padding 1em
+
+  p, input
+    margin 2em 3em 0 3em
+
+.marketselector
+  height 440px
+  width 440px
+  text-align center
+  transform translate3d(calc(50vw - 220px),calc(50vh - 220px),0px)
+
+.alarms
+  height 500px
+  width 510px
+  transform translate3d(calc(50vw - 305px),calc(50vh - 250px),0px)
+
+  h2
+    font-weight normal
+    font-size 1.4em
+    padding 1.5em
+
+  #chart
+    width 510px
+    overflow hidden
+
+    .alarm-line
+      padding 2px
+      background-color transparent
+
+      &:hover
+        stroke-width 3px
+        cursor move
+
+  .alarm-box
+    position absolute
+    top 0
+    left 0
+    transform translate3d(525px,0px,0px)
+
+  .alarm-cursor
+    position absolute
+    left 0
+    top 0
+    padding 0.5em
+    border-radius 3px
+    background-color green-color-1
+
+    > *
+      display inline
+      clear none
+
+    &::before
+      cursor move
+      position absolute
+      display block
+      background-color green-color-1
+      width 10px
+      height 10px
+      font-family Arial
+      content " "
+      z-index -10
+      transform translate3d(-13px,3px,0px) rotate(45deg)
+
+.btcpay
+  height 440px
+  width 440px
+  text-align center
+  transform translate3d(calc(50vw - 220px),calc(50vh - 220px),0px)

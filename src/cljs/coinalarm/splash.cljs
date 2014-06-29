@@ -2,9 +2,6 @@
   (:require [om.core :as om :include-macros true]
             [sablono.core :as html :refer-macros [html]]))
 
-(defn advance-page [cursor]
-  (om/transact! cursor ()))
-
 (defn splashscreen [cursor owner]
   (reify
     om/IDidMount
@@ -14,10 +11,15 @@
     )
     om/IRender
     (render [_]
-      (html [:div.splashscreen
-              [:div#chart nil]
+      (html [:div
               [:div.front
+                [:img {:src "img/logo.svg"}]
                 [:h1 "CoinAlarm"]
                 [:h3 "Get a SMS message when its time to sell or buy Bitcoins*!"]
-                [:sub "*and alt coins"]
-                [:div {:onClick (fn [] (om/transact! cursor #(assoc % :page :phone)))} "start"]]]))))
+                [:p "*and other alt coins"]
+                [:div.box-footer
+                  [:a.button {:href "#"
+                       :onClick (fn [] (om/transact! cursor #(assoc % :page "phoneform")))} "start!"]]
+                [:div.backplate nil]]
+              [:div#chart nil]
+             ]))))

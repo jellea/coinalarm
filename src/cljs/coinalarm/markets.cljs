@@ -1,14 +1,6 @@
 (ns coinalarm.markets
-  (:require [cljs.reader :as reader]
-            [goog.events :as events]
-            [goog.dom :as gdom]
-            [om.core :as om :include-macros true]
-            [om.dom :as dom :include-macros true])
-  (:import [goog.net XhrIo]
-           goog.net.EventType
-           [goog.events EventType]))
-
-(enable-console-print!)
+  (:require [sablono.core :as html :refer-macros [html]]
+            [om.core :as om :include-macros true]))
 
 (def coins [{:name "Bitcoin/US Dollar"  :market "USD-BTC" }
             {:name "Dogecoin/US Dollar" :market "USD-DOGE" }
@@ -39,10 +31,11 @@
   (let [code (.. e -target -value)]
     (om/set-state! owner :market code)))
 
-(defn send-markets [e state ownder]
+(defn send-markets [e state app owner]
   (let [market (:market state)
         coin   (:coin state)]
-    (println "sending" market coin)))
+    (println "sending" market coin)
+    (om/transact! app #(assoc % :page "alarms"))))
 
 (defn market-selector [app owner]
   (reify
@@ -59,21 +52,25 @@
     om/IRenderState
     (render-state [this state]
       (println (:markets state))
-      (dom/div nil
-         (dom/h1 nil "Great!")
-         (dom/p nil "A confirmation text has been sent.")
-         (dom/p nil "Let's set you up meanwhile:")
-         (dom/div nil
-           (dom/p nil "What do you trade?")
-           (apply dom/select #js {:ref "coin-field"
-                                  :onChange #(handle-coin % state owner)
-                                  :value (:coin state)}
-              (map #(dom/option #js {:value (:market %)} (:name %)) (:coins state))))
-         (dom/div nil
-            (dom/p nil "Where do you trade?")
-            (apply dom/select #js {:ref "market-field"
-                         :onChange #(handle-market % state owner)
-                         :value (:market state)}
-              (map #(dom/option #js {:value (:code %)} (:name %)) (:markets state))))
-                      (dom/div nil
-         (dom/button #js {:onClick #(send-markets % state owner)} "Done"))))))
+      (html
+        [:div
+         [:h1 "Great!"]
+         [:p "A confirmation text has been sent."]
+         [:p "Let's set you up meanwhile:"]
+         [:div
+           [:p "What do you trade?"]
+           [:select {:ref "coin-field"
+                            :onChange #(handle-coin % state owner)
+                            :value (:coin state)} ""
+                    (map #(html [:option {:value (:market %)} (:name %)]) (:coins state))
+            ]]
+         [:div
+            [:p "Where do you trade?"]
+            [:select {:ref "market-field"
+                             :onChange #(handle-market % state owner)
+                             :value (:market state)}
+                    (map #(html [:option {:value (:code %)} (:name %)]) (:markets state))]]
+                     ;;(map #(render-alarm % cursor owner state) (:alarms state))]]))))
+         [:div.box-footer
+           [:a.button {:href "#"
+                       :onClick #(send-markets % state app owner)} "done"]]]))))

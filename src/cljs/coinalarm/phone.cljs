@@ -1,22 +1,15 @@
 (ns coinalarm.phone
-  (:require [cljs.reader :as reader]
-            [goog.events :as events]
-            [goog.dom :as gdom]
-            [om.core :as om :include-macros true]
-            [om.dom :as dom :include-macros true])
-  (:import [goog.net XhrIo]
-           goog.net.EventType
-           [goog.events EventType]))
-
-(enable-console-print!)
+  (:require [sablono.core :as html :refer-macros [html]]
+            [om.core :as om :include-macros true]))
 
 (def app-state (atom {:number ""}))
 
-(defn send-number [e state owner]
+(defn send-number [e state app owner]
   (when (:valid state)
     (let [phone-number (-> (om/get-node owner "phone-field")
                            .-value)]
-      (println "sendint phone number" phone-number))))
+      (println "sendint phone number" phone-number)
+      (om/transact! app #(assoc % :page "marketselector")))))
 
 (defn validate-number [phone-number]
   ;; TODO: validate phone no
@@ -41,19 +34,16 @@
        :message false})
     om/IRenderState
     (render-state [this state]
-      (dom/div nil
-         (dom/p nil "Fill in your phone number to receive text messages")
-         ;; error message
-         (when (:message state)
-            (dom/div nil "Yo that's not a real phone number"))
-         (dom/input #js {:placeholder "+47 999 999 000"
-                         :ref "phone-field"
-                         :onChange #(handle-number % state owner)
-                         :value (:number state)})
-         (dom/div nil
-           (dom/button #js {:onClick #(send-number % state owner)
-                            :disabled (not (:valid state))} "Done"))))))
-
-
-;; (println "Mounting phone box")
-;; (om/root phone-box app-state {:target (. js/document (getElementById "phone"))})
+      (html
+        [:div
+          [:p "Fill in your phone number to receive text messages"]
+          ;; error message
+          (when (:message state)
+            [:div "Yo that's not a real phone number"])
+          [:input {:placeholder "+47 999 999 000"
+                   :ref "phone-field"
+                   :onChange #(handle-number % state owner)
+                   :value (:number state)}]
+          [:div.box-footer
+            [:a.button {:href "#"
+                        :onClick #(send-number % state app owner)} "done"]]]))))
