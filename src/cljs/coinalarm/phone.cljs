@@ -6,11 +6,12 @@
 
 (def app-state (atom {:number ""}))
 
-(defn send-number [e state owner]
+(defn send-number [e state app owner]
   (when (:valid state)
     (let [phone-number (-> (om/get-node owner "phone-field")
                            .-value)]
-      (println "sendint phone number" phone-number))))
+      (println "sendint phone number" phone-number)
+      (om/transact! app #(assoc % :page "marketselector")))))
 
 (defn validate-number [phone-number]
   ;; TODO: validate phone no
@@ -46,4 +47,4 @@
                    :onChange #(handle-number % state owner)
                    :value (:number state)}]
           [:div.box-footer
-            [:a.button {:onClick #(send-number % state owner)} "done"]]]))))
+            [:a.button {:onClick #(send-number % state app owner)} "done"]]]))))

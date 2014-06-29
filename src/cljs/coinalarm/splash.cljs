@@ -2,9 +2,6 @@
   (:require [om.core :as om :include-macros true]
             [sablono.core :as html :refer-macros [html]]))
 
-(defn advance-page [cursor]
-  (om/transact! cursor ()))
-
 (defn splashscreen [cursor owner]
   (reify
     om/IDidMount

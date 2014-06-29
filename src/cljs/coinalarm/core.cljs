@@ -8,7 +8,7 @@
 
 (enable-console-print!)
 
-(def app-state (atom {:page "splashscreen"
+(def app-state (atom {:page "alarms"
                       :number ""}))
 
 (defn main-component [cursor owner]
@@ -18,6 +18,8 @@
               (cond
                 (= (:page cursor) "splashscreen") (om/build splash/splashscreen cursor)
                 (= (:page cursor) "phoneform") (om/build phone/phone-box cursor)
+                (= (:page cursor) "marketselector") (om/build markets/market-selector cursor)
+                (= (:page cursor) "alarms") (om/build alarms/alarms-selector cursor)
                 )]])))
 
-;;(om/root main-component app-state {:target (. js/document (getElementById "app"))})
+(om/root main-component app-state {:target (. js/document (getElementById "app"))})

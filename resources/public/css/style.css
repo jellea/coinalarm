@@ -119,6 +119,20 @@ html, body{
   -webkit-transform: translate3d(calc(50vw - 210px),calc(50vh - 135px),0px);
 }
 
+.marketselector{
+  height: 440px;
+  width: 440px;
+  text-align: center;
+  -webkit-transform: translate3d(calc(50vw - 220px),calc(50vh - 220px),0px);
+}
+
+select {
+  background: #fff;
+  font-size: 1em;
+  color: #222;
+  font-family: Arvo, Helvetica, Arial, sans-serif;
+}
+
 .phoneform > div {
   padding-top: 1em;
 }

@@ -53,5 +53,3 @@
                      (map #(render-alarm % cursor owner state) (:alarms state))]]))))
 
 (def app-state (atom {:unused ""}))
-(print "rendering alarms-selector")
-(om/root alarms-selector app-state {:target (. js/document (getElementById "app"))})
