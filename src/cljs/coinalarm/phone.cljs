@@ -1,12 +1,6 @@
 (ns coinalarm.phone
-  (:require [cljs.reader :as reader]
-            [goog.events :as events]
-            [goog.dom :as gdom]
-            [om.core :as om :include-macros true]
-            [om.dom :as dom :include-macros true])
-  (:import [goog.net XhrIo]
-           goog.net.EventType
-           [goog.events EventType]))
+  (:require [sablono.core :as html :refer-macros [html]]
+            [om.core :as om :include-macros true]))
 
 (enable-console-print!)
 
@@ -41,19 +35,15 @@
        :message false})
     om/IRenderState
     (render-state [this state]
-      (dom/div nil
-         (dom/p nil "Fill in your phone number to receive text messages")
-         ;; error message
-         (when (:message state)
-            (dom/div nil "Yo that's not a real phone number"))
-         (dom/input #js {:placeholder "+47 999 999 000"
-                         :ref "phone-field"
-                         :onChange #(handle-number % state owner)
-                         :value (:number state)})
-         (dom/div nil
-           (dom/button #js {:onClick #(send-number % state owner)
-                            :disabled (not (:valid state))} "Done"))))))
-
-
-;; (println "Mounting phone box")
-;; (om/root phone-box app-state {:target (. js/document (getElementById "phone"))})
+      (html
+        [:div
+          [:p "Fill in your phone number to receive text messages"]
+          ;; error message
+          (when (:message state)
+            [:div "Yo that's not a real phone number"])
+          [:input {:placeholder "+47 999 999 000"
+                   :ref "phone-field"
+                   :onChange #(handle-number % state owner)
+                   :value (:number state)}]
+          [:div.box-footer
+            [:a.button {:onClick #(send-number % state owner)} "done"]]]))))

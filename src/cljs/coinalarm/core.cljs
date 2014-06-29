@@ -1,8 +1,9 @@
 (ns coinalarm.core
   (:require [coinalarm.phone :as phone]
             [coinalarm.splash :as splash]
-            [sablono.core :as html :refer-macros [html]]
             [coinalarm.markets :as markets]
+            [coinalarm.alarms :as alarms]
+            [sablono.core :as html :refer-macros [html]]
             [om.core :as om :include-macros true]))
 
 (enable-console-print!)
@@ -19,4 +20,4 @@
                 (= (:page cursor) "phoneform") (om/build phone/phone-box cursor)
                 )]])))
 
-(om/root main-component app-state {:target (. js/document (getElementById "app"))})
+;;(om/root main-component app-state {:target (. js/document (getElementById "app"))})

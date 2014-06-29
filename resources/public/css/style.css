@@ -47,16 +47,27 @@ html, body{
   background-image: linear-gradient(-90deg, #41B972 0%, #298A51 40%, #298A51 58%, #41B972 100%);
   position: absolute;
   display: block;
-  z-index: 10;
+  z-index: -10;
   width: 720px;
-  height: 90%;
-  margin: 20px -150px 20px -150px;
+  height: 340px;
+  margin: -290px -150px 20px -150px;
 }
 
 .box {
   background-color: #41B972;
   border-radius: 2px;
-  -webkit-transition: all 1s;
+  -webkit-transition: all 0.3s ease-in-out;
+}
+
+/*@-webkit-keyframes fade-in-anim {*/
+  /*from  { opacity: 0; }*/
+  /*to    { opacity: 1; }*/
+/*}*/
+
+.content {
+  /*-webkit-animation-duration: 0.2s;*/
+  /*-webkit-animation-delay: 0.3s;*/
+  /*-webkit-animation-name: fade-in-anim;*/
 }
 
 .splashscreen{
@@ -64,13 +75,61 @@ html, body{
   height: 420px;
   width: 420px;
   position: absolute;
-  -webkit-transform: translate3d(calc(50vw - 210px),calc(50vh - 210px),0px);
+  -webkit-transform: translate3d(calc(50vw - 210px), calc(50vh - 210px), 0px);
+}
+
+.front {
+  padding-top: 3em;
+  z-index: 12;
+}
+
+.box-footer {
+  background-color: #fff;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  padding: 2em;
+  border-radius: 0px 0px 2px 2px;
+  background: #FFFFFF;
+}
+
+.button {
+  font-size: 1em;
+  border-radius: 2px;
+  background: #41B972;
+  padding: 0.7em;
+  color: #fff;
+  text-decoration: none;
+}
+
+.backplate {
+  background-color: #41B972;
+  position: absolute;
+  top: 0;
+  display: block;
+  height: 100%;
+  width: 100%;
+  z-index: -9;
 }
 
 .phoneform {
   height: 274px;
   width: 420px;
+  text-align: center;
   -webkit-transform: translate3d(calc(50vw - 210px),calc(50vh - 135px),0px);
+}
+
+.phoneform > div {
+  padding-top: 1em;
+}
+
+.phoneform input {
+  padding: 1em;
+  border-radius: 5px;
+}
+
+.phoneform p, .phoneform input {
+  margin: 2em 3em 0 3em;
 }
 
 .logo{
@@ -82,6 +141,17 @@ h1{
   line-height: 1.5em;
   padding: 5px;
   font-weight: normal;
+}
+
+h3{
+  font-weight: normal;
+  padding: 0 3em 0 3em;
+}
+
+.front p {
+  font-size: 0.7em;
+  text-align: right;
+  padding-right: 1em;
 }
 
 input {
@@ -113,4 +183,18 @@ input[type=submit]:hover{
   position:absolute;
   bottom: 0px;
   right: 1em;
+}
+
+/*
+  Stuff for the alarms component
+*/
+
+.alarm-box {
+  position: relative;
+}
+
+.alarm-cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
 }

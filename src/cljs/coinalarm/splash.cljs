@@ -15,9 +15,14 @@
     om/IRender
     (render [_]
       (html [:div
-             ;[:div#chart nil]
               [:div.front
+                [:img {:src "img/logo.svg"}]
                 [:h1 "CoinAlarm"]
                 [:h3 "Get a SMS message when its time to sell or buy Bitcoins*!"]
-                [:sub "*and alt coins"]
-                [:div {:onClick (fn [] (om/transact! cursor #(assoc % :page "phoneform")))} "start"]]]))))
+                [:p "*and other alt coins"]
+                [:div.box-footer
+                  [:a.button {:href "#"
+                       :onClick (fn [] (om/transact! cursor #(assoc % :page "phoneform")))} "start!"]]
+                [:div.backplate nil]]
+              [:div#chart nil]
+             ]))))
