@@ -38,7 +38,7 @@ input
   font-family Arvo, Helvetica, Arial, sans-serif
   font-size 0.8em
   padding 10px
-  border 2px green-color-1 solid
+  border 0px
   background-color #fff
   color #298A51
   outlinenone
@@ -50,7 +50,7 @@ input[type=submit]
 
 input[type=submit]hover
   background-color #298A51
-  border2px solid #298A51
+  border 0px
 
 .login
   position absolute
@@ -238,18 +238,32 @@ input[type=submit]hover
 
   .alarm-cursor
     position absolute
+    white-space nowrap
+    line-height 1em
+    height 2em
     left 0
     top 0
-    padding 0.5em
+    padding 9px
     border-radius 3px
     background-color green-color-1
+    cursor move
 
-    > *
+    &.popular
+      opacity 0.4
+      cursor initial
+      font-size 0.8em
+
+    *
+      line-height 1em
       display inline
       clear none
+      padding 0
+      margin 0 0 0 0
+
+    input
+      padding 2px
 
     &::before
-      cursor move
       position absolute
       display block
       background-color green-color-1
@@ -258,7 +272,7 @@ input[type=submit]hover
       font-family Arial
       content " "
       z-index -10
-      transform translate3d(-13px,3px,0px) rotate(45deg)
+      transform translate3d(-13px,1px,0px) rotate(45deg)
 
 .btcpay
   height 440px
