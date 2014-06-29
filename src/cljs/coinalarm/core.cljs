@@ -8,7 +8,7 @@
 
 (enable-console-print!)
 
-(def app-state (atom {:page "splashscreen"
+(def app-state (atom {:page "alarms"
                       :number ""}))
 
 (defn main-component [cursor owner]
@@ -29,3 +29,4 @@
               [:p "about - open source"]]])))
 
 (om/root main-component app-state {:target (. js/document (getElementById "app"))})
+
