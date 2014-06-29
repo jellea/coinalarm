@@ -130,3 +130,17 @@ input[type=submit]:hover{
   bottom: 0px;
   right: 1em;
 }
+
+/*
+  Stuff for the alarms component
+*/
+
+.alarm-box {
+  position: relative;
+}
+
+.alarm-cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
