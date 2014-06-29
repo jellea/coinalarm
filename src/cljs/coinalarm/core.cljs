@@ -8,18 +8,24 @@
 
 (enable-console-print!)
 
-(def app-state (atom {:page "alarms"
+(def app-state (atom {:page "splashscreen"
                       :number ""}))
 
 (defn main-component [cursor owner]
   (om/component
-    (html [:div.container
+    (html
+        [:div.container
+             [:div.login
+              [:p "login"]]
+
             [:div {:className (str "box " (:page cursor))}
               (cond
                 (= (:page cursor) "splashscreen") (om/build splash/splashscreen cursor)
                 (= (:page cursor) "phoneform") (om/build phone/phone-box cursor)
                 (= (:page cursor) "marketselector") (om/build markets/market-selector cursor)
                 (= (:page cursor) "alarms") (om/build alarms/alarms-selector cursor)
-                )]])))
+              )]
+            [:div.footer
+              [:p "about - open source"]]])))
 
 (om/root main-component app-state {:target (. js/document (getElementById "app"))})

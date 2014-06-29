@@ -25,17 +25,16 @@
            :key (:key alarm)
            :on-click (fn [e] (om/set-state! owner :selected alarm))
            :data-alarm (:value alarm)}
-       [:div {:class "alarm-flag"
-              :on-mousemove (fn [e]  )
-              :on-mousedown (fn [e] )
-              :on-mouseup   (fn [e] )
-              } (:value alarm)]
-       (when selected
-         [:div {:class "alarm-message"}
-            [:p "Message"]
-            ;; TODO: get coin name
-            [:textarea {:placeholder (str "OMG [coin] reaches " (:value alarm))}]
-            [:a "Delete alarm"]])]))
+       [:div.alarm-flag { :on-mousemove (fn [e] )
+                          :on-mousedown (fn [e] )
+                          :on-mouseup   (fn [e] )
+                          } (:value alarm)]
+         (when selected
+           [:div.alarm-message
+              [:p "Message"]
+              ;; TODO: get coin name
+              [:textarea {:placeholder (str "OMG [coin] reaches " (:value alarm))}]
+              [:a "Delete alarm"]])]))
 
 (defn alarms-selector [cursor owner]
     (reify
@@ -48,8 +47,10 @@
       (render-state [this state]
           (println (:selected state))
           (html [:div
-                   [:h1 "Set your alarms"]
+                   [:h2 "When do you want to buy and sell?"]
                    [:div {:class "alarm-box"}
-                     (map #(render-alarm % cursor owner state) (:alarms state))]]))))
+                     (map #(render-alarm % cursor owner state) (:alarms state))]
+                   [:div.box-footer
+                     [:a.button "done"]]]))))
 
 (def app-state (atom {:unused ""}))
