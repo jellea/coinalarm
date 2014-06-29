@@ -47,4 +47,5 @@
                    :onChange #(handle-number % state owner)
                    :value (:number state)}]
           [:div.box-footer
-            [:a.button {:onClick #(send-number % state app owner)} "done"]]]))))
+            [:a.button {:href "#"
+                        :onClick #(send-number % state app owner)} "done"]]]))))

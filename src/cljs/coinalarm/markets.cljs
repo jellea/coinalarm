@@ -74,4 +74,5 @@
                     (map #(html [:option {:value (:code %)} (:name %)]) (:markets state))]]
                      ;;(map #(render-alarm % cursor owner state) (:alarms state))]]))))
          [:div.box-footer
-           [:a.button {:onClick #(send-markets % state app owner)} "done"]]]))))
+           [:a.button {:href "#"
+                       :onClick #(send-markets % state app owner)} "done"]]]))))

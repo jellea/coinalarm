@@ -36,6 +36,12 @@
               [:textarea {:placeholder (str "OMG [coin] reaches " (:value alarm))}]
               [:a "Delete alarm"]])]))
 
+(defn render-chart [cursor owner]
+  (om/component
+    (html [:svg#chart
+            [:path.alarm-line {:d "M517,39 L0,39" :stroke "#FFFFFF" :strokeDasharray "3"}]
+            [:path.alarm-line {:d "M517,239 L0,239" :stroke "#FFFFFF" :strokeDasharray "3"}]])))
+
 (defn alarms-selector [cursor owner]
     (reify
       om/IInitState
@@ -48,6 +54,7 @@
           (println (:selected state))
           (html [:div
                    [:h2 "When do you want to buy and sell?"]
+                   (om/build render-chart cursor)
                    [:div {:class "alarm-box"}
                      (map #(render-alarm % cursor owner state) (:alarms state))]
                    [:div.box-footer
