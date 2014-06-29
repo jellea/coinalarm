@@ -1,9 +1,10 @@
 (ns coinalarm.tests
-  (:require [coinalarm.persistence :as pers]))
+  (:require [coinalarm.persistence :as pers]
+            [coinalarm.btc :as btc]))
 
 
 (defn generate-users [n]
-  (map #(hash-map :phone % :subscriptions [{:price 1.3 :symbol "bcEUR" :upper true}]) (range n)))
+  (map #(hash-map :phone % :subscriptions [{:price 1.3 :symbol "bcEUR" :upper true :currency "EUR"}]) (range n)))
 
 ;; make sure you switched to a testing database
 

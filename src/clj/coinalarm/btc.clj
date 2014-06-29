@@ -60,7 +60,7 @@
   (json/read-str data :key-fn keyword))
 
 (defn restructure-dict [data]
-  (into {} (map (fn [[f s]] (vector f (group-by :symbol s)))
+  (into {} (map (fn [[f s]] (vector f (apply merge (map #(hash-map (:symbol %) %) s))))
                 (group-by :currency data))))
 
 (defn get-latest-symbols [callback]
@@ -69,5 +69,10 @@
                     :callback (fn [{:keys [status headers body error]}]
                                 ((comp callback restructure-dict json->dict) body))}))
 
+(def mockup-data
+  [{:currency "EUR" :symbol "bcEUR" :price 1.545}])
+
+(defn get-latest-symbols-mockup [callback]
+  ((comp callback restructure-dict) mockup-data))
 
 

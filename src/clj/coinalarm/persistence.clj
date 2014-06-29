@@ -6,6 +6,9 @@
 
 (defmacro wcar* [& body] `(car/wcar server1-conn ~@body))
 
+;; USER
+
+;; TODO: Also delete the user, this only deletes our refeference
 (defn reset-users! []
   (wcar* (car/set "users" [])))
 
@@ -28,3 +31,10 @@
 (defn get-all-user []
   (let [users (wcar* (car/get "users"))]
     (map #(wcar* (car/get %)) users)))
+
+;; HISTORICAL BTC DATA
+
+(def max-number-h-btc 100) ;; limit the number of historical entries, we don't need that many
+
+(defn reset-h-btcs! []
+  (wcar* (car/set "h-btcs" [])))

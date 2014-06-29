@@ -9,5 +9,3 @@
 
 (defn send-sms [{:keys [phone text callback]}]
   (client/post url {:query-params {:dst phone :text text :src 0000 :type "sms"}} callback))
-
-
