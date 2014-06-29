@@ -2,8 +2,6 @@
   (:require [sablono.core :as html :refer-macros [html]]
             [om.core :as om :include-macros true]))
 
-(enable-console-print!)
-
 (def coins [{:name "Bitcoin/US Dollar"  :market "USD-BTC" }
             {:name "Dogecoin/US Dollar" :market "USD-DOGE" }
             {:name "Litecoin/US Dollar" :market "USD-LTC" }

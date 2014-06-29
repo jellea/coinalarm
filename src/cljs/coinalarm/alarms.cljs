@@ -9,9 +9,6 @@
            goog.net.EventType
            [goog.events EventType]))
 
-(enable-console-print!)
-
-
 (defn get-y-pos [value]
   (/ (- 1200 value) 2))
 
@@ -31,14 +28,14 @@
                           } (:value alarm)]
          (when selected
            [:div.alarm-message
-              [:p "Message"]
               ;; TODO: get coin name
-              [:textarea {:placeholder (str "OMG [coin] reaches " (:value alarm))}]
-              [:a "Delete alarm"]])]))
+              [:img {:src "img/del.svg"}]
+              [:input {:type "text" :placeholder (str "OMG [coin] reaches " (:value alarm))}]])]))
 
 (defn render-chart [cursor owner]
   (om/component
     (html [:svg#chart
+            [:path {:d "M0.5,108.5 L107.5,31.5 L239.242187,138.828125 L362.554688,61.8867188 L401.175781,133.253906 L518.119141,0.15234375" :stroke "#FF0000" :fill "none"}]
             [:path.alarm-line {:d "M517,39 L0,39" :stroke "#FFFFFF" :strokeDasharray "3"}]
             [:path.alarm-line {:d "M517,239 L0,239" :stroke "#FFFFFF" :strokeDasharray "3"}]])))
 
@@ -58,6 +55,7 @@
                    [:div {:class "alarm-box"}
                      (map #(render-alarm % cursor owner state) (:alarms state))]
                    [:div.box-footer
-                     [:a.button "done"]]]))))
+                     [:a.button {:href "#"
+                                 :onClick (fn [] (om/transact! cursor #(assoc % :page "phoneconfirm")))} "done"]]]))))
 
 (def app-state (atom {:unused ""}))

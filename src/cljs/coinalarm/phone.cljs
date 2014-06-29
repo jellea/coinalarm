@@ -2,8 +2,6 @@
   (:require [sablono.core :as html :refer-macros [html]]
             [om.core :as om :include-macros true]))
 
-(enable-console-print!)
-
 (def app-state (atom {:number ""}))
 
 (defn send-number [e state app owner]

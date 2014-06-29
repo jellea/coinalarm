@@ -4,6 +4,8 @@
             [coinalarm.markets :as markets]
             [coinalarm.alarms :as alarms]
             [coinalarm.about :as about]
+            [coinalarm.phoneconfirm :as phoneconfirm]
+            [coinalarm.btcpay :as btcpay]
             [sablono.core :as html :refer-macros [html]]
             [om.core :as om :include-macros true]))
 
@@ -31,12 +33,14 @@
               (= (:page cursor) "phoneform") (om/build phone/phone-box cursor)
               (= (:page cursor) "marketselector") (om/build markets/market-selector cursor)
               (= (:page cursor) "alarms") (om/build alarms/alarms-selector cursor)
+              (= (:page cursor) "phoneconfirm") (om/build phoneconfirm/phoneconfirm cursor)
+              (= (:page cursor) "btcpay") (om/build btcpay/btcpay cursor)
             )]
 
           [:div.footer
             [:p
               [:a {:onClick (fn [] (om/transact! cursor #(assoc % :modal about/about-modal)))} "about"]
               " - "
-              [:a {:onClick (fn [] (om/transact! cursor #(assoc % :modal about/about-modal)))} "open source"]]]])))
+              [:a {:onClick (fn [] (om/transact! cursor #(assoc % :modal about/opensource-modal)))} "open source"]]]])))
 
 (om/root main-component app-state {:target (. js/document (getElementById "app"))})
