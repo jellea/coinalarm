@@ -98,7 +98,7 @@
           (html [:div
                    [:h2 "When do you want to buy and sell?"]
                    [:div {:class "alarm-box"}
-                     ;;(map #(render-alarm % cursor owner state) (:alarms state))
+                     (map #(render-alarm % cursor owner state) (:alarms state))
                     ]
                    [:div.box-footer
                      [:a.button "done"]]]))))
