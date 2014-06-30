@@ -7,11 +7,18 @@
             [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]))
 
+
+;; about calculating y-positions from dollar values:
+;; try to fit the range 1200 to 300 on 300px
+;; 1200 becomes the top (0)
+;; and 300 becomes the bottom (300px)
+;; since the coordinates are starting on top left
+;; we need to invert it
 (defn get-y-pos [value]
-  (/ (- 1200 value) 2))
+  (/ (- 1200 value) 3))
 
 (defn get-val-diff-from-y-diff [ypos]
-  (* 2 ypos))
+  (* 3 ypos))
 
 (defn start-listen [cb]
   ;; using .addEventListener instead of google events,
@@ -68,17 +75,27 @@
 
 (defn render-popular [alarm cursor owner state]
   [:div.alarm-cursor.popular {:style {:-webkit-transform (str "translateY(" (get-y-pos (:value alarm)) "px)") }}
-    [:div.alarm-flag (str "$" (:value alarm) " average buy/sell of CoinAlarm users")]])
+   [:div.alarm-flag (str "$" (:value alarm) " average buy/sell of CoinAlarm users")]])
+
+               [:path.alarm-line {:d "M517,187 L0,187" :stroke "#C7C7C7" :strokeDasharray "3"}]
+
+(defn horizontal-line [y-pos]
+  (str "M517," y-pos " L0," y-pos))
 
 (defn render-chart [cursor owner]
-  (om/component
-    (html [:svg#chart
-            [:path {:d "M0.5,108.5 L107.5,31.5 L239.242187,138.828125 L362.554688,61.8867188 L401.175781,133.253906 L518.119141,0.15234375" :stroke "#FF0000" :fill "none"}]
-            [:path.alarm-line {:d "M517,39 L0,39" :stroke "#FFFFFF" :strokeDasharray "3"}]
-            [:path.alarm-line {:d "M517,239 L0,239" :stroke "#FFFFFF" :strokeDasharray "3"}]
-            [:path.alarm-line {:d "M517,187 L0,187" :stroke "#C7C7C7" :strokeDasharray "3"}]
-            [:path.alarm-line {:d "M517,140 L0,140" :stroke "#C7C7C7" :strokeDasharray "3"}]
-           ])))
+  (reify
+    om/IRenderState
+    (render-state [_ state]
+      (let [alarm-positions   (->> state :alarms (map :value) (map get-y-pos)) ;; 39, 239
+            popular-positions (->> state :popular (map :value) (map get-y-pos))];; 187, 140
+      (println alarm-positions popular-positions)
+      (html [:svg#chart
+               [:path {:d "M0.5,108.5 L107.5,31.5 L239.242187,138.828125 L362.554688,61.8867188 L401.175781,133.253906 L518.119141,0.15234375" :stroke "#FF0000" :fill "none"}]
+               (for [alarm alarm-positions]
+                 [:path.alarm-line {:d (horizontal-line alarm) :stroke "#FFFFFF" :strokeDasharray "3"}])
+               (for [p popular-positions]
+                 [:path.alarm-line {:d (horizontal-line p) :stroke "#C7C7C7" :strokeDasharray "3"}])
+             ])))))
 
 (defn alarms-selector [cursor owner]
     (reify
@@ -104,7 +121,8 @@
       (render-state [this state]
           (html [:div {:class (when (:selected state) "selected")}
                    [:h2 "When do you want to buy and sell?"]
-                   (om/build render-chart cursor)
+                   (om/build render-chart cursor {:state {:alarms (:alarms state)
+                                                          :popular (:popular state)}})
                    [:div {:class "alarm-box"}
                      (map #(render-alarm % cursor owner state) (:alarms state))
                      (map #(render-popular % cursor owner state) (:popular state))]

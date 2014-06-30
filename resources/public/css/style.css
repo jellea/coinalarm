@@ -321,11 +321,13 @@ input[type=submit]hover {
   position: absolute;
   top: 0;
   left: 0;
-  -webkit-transform: translate3d(525px, 0px, 0px);
-  -moz-transform: translate3d(525px, 0px, 0px);
-  -o-transform: translate3d(525px, 0px, 0px);
-  -ms-transform: translate3d(525px, 0px, 0px);
-  transform: translate3d(525px, 0px, 0px);
+  /* 98 is a magic number that aligns the cursors with the lines in the SVG chart
+     we should fix a better solution for this */
+  -webkit-transform: translate3d(525px, 98px, 0px);
+  -moz-transform: translate3d(525px, 98px, 0px);
+  -o-transform: translate3d(525px, 98px, 0px);
+  -ms-transform: translate3d(525px, 98px, 0px);
+  transform: translate3d(525px, 98px, 0px);
 }
 .alarms .alarm-cursor {
   position: absolute;
