@@ -11,7 +11,7 @@
 
 (enable-console-print!)
 
-(def app-state (atom {:page "alarms"
+(def app-state (atom {:page "splashscreen"
                       :number ""
                       :modal nil}))
 
