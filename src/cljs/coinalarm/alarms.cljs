@@ -1,53 +1,41 @@
 (ns coinalarm.alarms
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [cljs.reader :as reader]
-            [goog.events :as events]
             [goog.dom :as gdom]
             [cljs.core.async :as async]
             [sablono.core :as html :refer-macros [html]]
             [om.core :as om :include-macros true]
-            [om.dom :as dom :include-macros true])
-  (:import [goog.net XhrIo]
-           goog.net.EventType
-           [goog.events EventType]))
+            [om.dom :as dom :include-macros true]))
 
 (defn get-y-pos [value]
   (/ (- 1200 value) 2))
 
-
 (defn get-val-diff-from-y-diff [ypos]
   (* 2 ypos))
 
-
 (defn start-listen [cb]
-  (let [unlisten-key (events/listen js/window "mousemove" (fn [e] (cb e)))]
-    (events/listenOnce js/window "mouseup"
-       (fn [e] (events/unlistenByKey unlisten-key)))))
+  ;; using .addEventListener instead of google events,
+  ;; since GE removes the almost universially (IE8) supported pageX
 
-(defn set-starting-point [e owner]
-  (om/set-state! owner :startX (.-offsetX e))
-  (om/set-state! owner :startY (.-offsetY e)))
+  ;; listen for updated position
+  (let [cancel (fn mouseup[e]
+                 (.removeEventListener js/window "mousemove" cb)
+                 (.removeEventListener js/window "mouseup" mouseup))]
+    (.addEventListener js/window "mousemove" cb false)
+    ;; listen for mouseup to cancel updated position
+    (.addEventListener js/window "mouseup" cancel false)))
 
-(defn get-starting-diff [e owner]
-  (let [origX (om/get-state owner :startX)
-        origY (om/get-state owner :startY)
-        diffX (- origX (.-offsetX e))
-        diffY (- origY (.-offsetY e))]
-       ;; starting points haven't been set yet
-       ;; use this event as starting point and return 0
-       (if (.isNaN js/window diffX)
-         (do (set-starting-point e owner)
-             [0 0])
-         [diffX diffY])))
+(defn get-starting-diff [e origin]
+  (let [diffX (- (:pageX origin) (.-pageX e))
+        diffY (- (:pageY origin) (.-pageY e))]
+        [diffX diffY]))
 
 ;; TODO: set bounds
-(defn update-alarm-value [e owner alarm channel]
-  (let [[_ diff-y] (get-starting-diff e owner)
+(defn update-alarm-value [e origin alarm channel]
+  (let [[_ diff-y] (get-starting-diff e origin)
         val-diff (get-val-diff-from-y-diff diff-y)
         new-val (+ (:value alarm) val-diff)]
     (async/put! channel [new-val alarm])))
-    ;;(println "new value" new-val val-diff diff-y)))
-
 
 (defn render-alarm [alarm cursor owner state]
   (let [selected (= alarm (:selected state))
@@ -61,11 +49,15 @@
 
        [:div.alarm-flag {
               :on-mouse-down (fn [e]
-                               ;; for some reason the click event does not get offsetY, etc
-                               ;; so we can't use that to get the starting point
-                               ;;(set-starting-point e owner)
-                               ;; therefore i set it as state from the first event instead
-                               (start-listen #(update-alarm-value % owner alarm channel)))
+                               ;; note that this event is a react synthetic event
+                               ;; those are not exactly the same as the ones
+                               ;; from google events or native events
+                               ;; react events documented here:
+                               ;; http://facebook.github.io/react/docs/events.html#mouse-events
+                               ;; doc for google mouse event:
+                               ;; http://docs.closure-library.googlecode.com/git/class_goog_events_BrowserEvent.html
+                               (let [origin {:pageX (.-pageX e) :pageY (.-pageY e)}]
+                                 (start-listen #(update-alarm-value % origin alarm channel))))
               } (str "$" (:value alarm))]
 
          (when selected

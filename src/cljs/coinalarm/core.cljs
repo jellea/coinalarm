@@ -17,7 +17,7 @@
 
 (defn main-component [cursor owner]
   (om/component
-    (prn (:modal cursor))
+    ;;(prn (:modal cursor))
 
     (html
         [:div.container
