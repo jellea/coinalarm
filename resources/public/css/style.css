@@ -190,6 +190,46 @@ input[type=submit]hover {
   height: 340px;
   margin: -290px -150px 20px -150px;
 }
+.splashscreen #chart #alarms > g:nth-child(4n+0) {
+  -webkit-animation: popup-tip 3.2s ease-out 0s infinite alternate;
+  -moz-animation: popup-tip 3.2s ease-out 0s infinite alternate;
+  -o-animation: popup-tip 3.2s ease-out 0s infinite alternate;
+  -ms-animation: popup-tip 3.2s ease-out 0s infinite alternate;
+  animation: popup-tip 3.2s ease-out 0s infinite alternate;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+.splashscreen #chart #alarms > g:nth-child(4n+1) {
+  -webkit-animation: popup-tip 3.2s ease-out 1s infinite alternate;
+  -moz-animation: popup-tip 3.2s ease-out 1s infinite alternate;
+  -o-animation: popup-tip 3.2s ease-out 1s infinite alternate;
+  -ms-animation: popup-tip 3.2s ease-out 1s infinite alternate;
+  animation: popup-tip 3.2s ease-out 1s infinite alternate;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+.splashscreen #chart #alarms > g:nth-child(4n+2) {
+  -webkit-animation: popup-tip 3.2s ease-out 2s infinite alternate;
+  -moz-animation: popup-tip 3.2s ease-out 2s infinite alternate;
+  -o-animation: popup-tip 3.2s ease-out 2s infinite alternate;
+  -ms-animation: popup-tip 3.2s ease-out 2s infinite alternate;
+  animation: popup-tip 3.2s ease-out 2s infinite alternate;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+.splashscreen #chart #alarms > g:nth-child(4n+3) {
+  -webkit-animation: popup-tip 3.2s ease-out 3s infinite alternate;
+  -moz-animation: popup-tip 3.2s ease-out 3s infinite alternate;
+  -o-animation: popup-tip 3.2s ease-out 3s infinite alternate;
+  -ms-animation: popup-tip 3.2s ease-out 3s infinite alternate;
+  animation: popup-tip 3.2s ease-out 3s infinite alternate;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
 .splashscreen .front {
   padding-top: 3em;
   z-index: 12;
@@ -246,11 +286,11 @@ input[type=submit]hover {
 .alarms {
   height: 500px;
   width: 510px;
-  -webkit-transform: translate3d(calc(50vw - 305px), calc(50vh - 250px), 0px);
-  -moz-transform: translate3d(calc(50vw - 305px), calc(50vh - 250px), 0px);
-  -o-transform: translate3d(calc(50vw - 305px), calc(50vh - 250px), 0px);
-  -ms-transform: translate3d(calc(50vw - 305px), calc(50vh - 250px), 0px);
-  transform: translate3d(calc(50vw - 305px), calc(50vh - 250px), 0px);
+  -webkit-transform: translate3d(calc(50vw - 405px), calc(50vh - 250px), 0px);
+  -moz-transform: translate3d(calc(50vw - 405px), calc(50vh - 250px), 0px);
+  -o-transform: translate3d(calc(50vw - 405px), calc(50vh - 250px), 0px);
+  -ms-transform: translate3d(calc(50vw - 405px), calc(50vh - 250px), 0px);
+  transform: translate3d(calc(50vw - 405px), calc(50vh - 250px), 0px);
 }
 .alarms < .selected {
   -webkit-transform: translate3d(calc(50vw - 405px), calc(50vh - 250px), 0px);
@@ -267,6 +307,7 @@ input[type=submit]hover {
 .alarms #chart {
   width: 510px;
   overflow: hidden;
+  cursor: copy;
 }
 .alarms #chart .alarm-line {
   padding: 2px;
@@ -297,7 +338,7 @@ input[type=submit]hover {
   -webkit-border-radius: 3px;
   border-radius: 3px;
   background-color: #41b972;
-  cursor: move;
+  cursor: row-resize;
 }
 .alarms .alarm-cursor.popular {
   opacity: 0.4;
@@ -489,5 +530,100 @@ input[type=submit]hover {
     -o-transform: translate(calc(50vw - 300px), calc(50vh - 200px)) scale(1);
     -ms-transform: translate(calc(50vw - 300px), calc(50vh - 200px)) scale(1);
     transform: translate(calc(50vw - 300px), calc(50vh - 200px)) scale(1);
+  }
+}
+@-moz-keyframes popup-tip {
+  0% {
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+  }
+
+  20% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+
+  40% {
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+  }
+}
+@-webkit-keyframes popup-tip {
+  0% {
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+  }
+
+  20% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+
+  40% {
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+  }
+}
+@-o-keyframes popup-tip {
+  0% {
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+  }
+
+  20% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+
+  40% {
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+  }
+}
+@-ms-keyframes popup-tip {
+  0% {
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+  }
+
+  20% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+
+  40% {
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+  }
+}
+@keyframes popup-tip {
+  0% {
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+  }
+
+  20% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+
+  40% {
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
   }
 }

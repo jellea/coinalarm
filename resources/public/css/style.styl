@@ -147,6 +147,12 @@ input[type=submit]hover
 
 /* Pages */
 
+@keyframes popup-tip {
+  0% {opacity 0}
+  20%   {opacity 1}
+  40%   {opacity 0}
+}
+
 .splashscreen
   text-align center
   height 420px
@@ -167,6 +173,24 @@ input[type=submit]hover
     width 720px
     height 340px
     margin -290px -150px 20px -150px
+
+    #alarms
+      > g:nth-child(4n+0)
+        animation popup-tip 3.2s ease-out 0s infinite alternate;
+        opacity 0
+
+      > g:nth-child(4n+1)
+        animation popup-tip 3.2s ease-out 1s infinite alternate;
+        opacity 0
+
+      > g:nth-child(4n+2)
+        animation popup-tip 3.2s ease-out 2s infinite alternate;
+        opacity 0
+
+      > g:nth-child(4n+3)
+        animation popup-tip 3.2s ease-out 3s infinite alternate;
+        opacity 0
+
 
   .front
     padding-top 3em
@@ -211,7 +235,7 @@ input[type=submit]hover
 .alarms
   height 500px
   width 510px
-  transform translate3d(calc(50vw - 305px),calc(50vh - 250px),0px)
+  transform translate3d(calc(50vw - 405px),calc(50vh - 250px),0px)
 
   < .selected
     transform translate3d(calc(50vw - 405px),calc(50vh - 250px),0px)
@@ -224,6 +248,7 @@ input[type=submit]hover
   #chart
     width 510px
     overflow hidden
+    cursor copy
 
     .alarm-line
       padding 2px
@@ -249,7 +274,7 @@ input[type=submit]hover
     padding 9px
     border-radius 3px
     background-color green-color-1
-    cursor move
+    cursor row-resize
 
     &.popular
       opacity 0.4
