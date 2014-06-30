@@ -1913,6 +1913,7 @@ var DefaultDOMPropertyConfig = {
     stopOpacity: MUST_USE_ATTRIBUTE,
     stroke: MUST_USE_ATTRIBUTE,
     strokeLinecap: MUST_USE_ATTRIBUTE,
+    strokeDasharray: MUST_USE_ATTRIBUTE,
     strokeWidth: MUST_USE_ATTRIBUTE,
     textAnchor: MUST_USE_ATTRIBUTE,
     transform: MUST_USE_ATTRIBUTE,
@@ -1934,6 +1935,7 @@ var DefaultDOMPropertyConfig = {
     stopColor: 'stop-color',
     stopOpacity: 'stop-opacity',
     strokeLinecap: 'stroke-linecap',
+    strokeDasharray: 'stroke-dasharray',
     strokeWidth: 'stroke-width',
     textAnchor: 'text-anchor',
     viewBox: 'viewBox'

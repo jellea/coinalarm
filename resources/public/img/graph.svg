@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="519px" height="161px" viewBox="0 0 519 161" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.0.3 (7892) - http://www.bohemiancoding.com/sketch -->
+    <title>Line + Line + Line 4</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Line-+-Line-+-Line-4" sketch:type="MSLayerGroup" stroke-linecap="square">
+            <path d="M0.5,108.5 L107.5,31.5 L239.242187,138.828125 L362.554688,61.8867188 L401.175781,133.253906 L518.119141,0.15234375" id="Line" stroke="#FF0000" sketch:type="MSShapeGroup"></path>
+            <path d="M517.5,69.5 L1.5,69.5" id="Line" stroke="#FFFFFF" stroke-dasharray="3" sketch:type="MSShapeGroup"></path>
+            <path d="M517.5,160.5 L1.5,160.5" id="Line-4" stroke="#FFFFFF" stroke-dasharray="3" sketch:type="MSShapeGroup"></path>
+        </g>
+    </g>
+</svg>

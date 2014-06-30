@@ -1,4 +1,4 @@
-(ns coinalarm.phone
+(ns coinalarm.phoneconfirm
   (:require [sablono.core :as html :refer-macros [html]]
             [om.core :as om :include-macros true]))
 
@@ -6,10 +6,10 @@
 
 (defn send-number [e state app owner]
   (when (:valid state)
-    (let [phone-number (-> (om/get-node owner "phone-field")
+    (let [phone-number (-> (om/get-node owner "code-field")
                            .-value)]
       (println "sendint phone number" phone-number)
-      (om/transact! app #(assoc % :page "marketselector")))))
+      (om/transact! app #(assoc % :page "btcpay")))))
 
 (defn validate-number [phone-number]
   ;; TODO: validate phone no
@@ -25,7 +25,7 @@
     (om/set-state! owner :valid valid)
     (om/set-state! owner :message message)))
 
-(defn phone-box [app owner]
+(defn phoneconfirm [app owner]
   (reify
     om/IInitState
     (init-state [this]
@@ -36,12 +36,12 @@
     (render-state [this state]
       (html
         [:div
-          [:p "Fill in your phone number to receive text messages"]
+          [:p "You received your confirmation code. Fill in below."]
           ;; error message
           (when (:message state)
-            [:div "Yo that's not a real phone number"])
-          [:input {:placeholder "+47 999 999 000"
-                   :ref "phone-field"
+            [:div "Faulty code!"])
+          [:input {:placeholder "00000000"
+                   :ref "code-field"
                    :onChange #(handle-number % state owner)
                    :value (:number state)}]
           [:div.box-footer

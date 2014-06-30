@@ -11,11 +11,9 @@
            goog.net.EventType
            [goog.events EventType]))
 
-(enable-console-print!)
-
-
 (defn get-y-pos [value]
   (/ (- 1200 value) 2))
+
 
 (defn get-val-diff-from-y-diff [ypos]
   (* 2 ypos))
@@ -50,6 +48,7 @@
     (async/put! channel [new-val alarm])))
     ;;(println "new value" new-val val-diff diff-y)))
 
+
 (defn render-alarm [alarm cursor owner state]
   (let [selected (= alarm (:selected state))
         channel (:channel state)]
@@ -59,6 +58,7 @@
            :key (:key alarm)
            :on-click (fn [e] (om/set-state! owner :selected alarm))
            :data-alarm (:value alarm)}
+
        [:div.alarm-flag {
               :on-mouse-down (fn [e]
                                ;; for some reason the click event does not get offsetY, etc
@@ -66,14 +66,27 @@
                                ;;(set-starting-point e owner)
                                ;; therefore i set it as state from the first event instead
                                (start-listen #(update-alarm-value % owner alarm channel)))
-              } (:value alarm)]
+              } (str "$" (:value alarm))]
 
          (when selected
            [:div.alarm-message
-              [:p "Message"]
               ;; TODO: get coin name
-              [:textarea {:placeholder (str "OMG [coin] reaches " (:value alarm))}]
-              [:a "Delete alarm"]])]))
+              [:img {:src "img/del.svg"}]
+              [:input {:type "text" :placeholder (str "OMG [coin] reaches " (:value alarm))}]])]))
+
+(defn render-popular [alarm cursor owner state]
+  [:div.alarm-cursor.popular {:style {:-webkit-transform (str "translateY(" (get-y-pos (:value alarm)) "px)") }}
+    [:div.alarm-flag (str "$" (:value alarm) " average buy/sell of CoinAlarm users")]])
+
+(defn render-chart [cursor owner]
+  (om/component
+    (html [:svg#chart
+            [:path {:d "M0.5,108.5 L107.5,31.5 L239.242187,138.828125 L362.554688,61.8867188 L401.175781,133.253906 L518.119141,0.15234375" :stroke "#FF0000" :fill "none"}]
+            [:path.alarm-line {:d "M517,39 L0,39" :stroke "#FFFFFF" :strokeDasharray "3"}]
+            [:path.alarm-line {:d "M517,239 L0,239" :stroke "#FFFFFF" :strokeDasharray "3"}]
+            [:path.alarm-line {:d "M517,187 L0,187" :stroke "#C7C7C7" :strokeDasharray "3"}]
+            [:path.alarm-line {:d "M517,140 L0,140" :stroke "#C7C7C7" :strokeDasharray "3"}]
+           ])))
 
 (defn alarms-selector [cursor owner]
     (reify
@@ -81,8 +94,10 @@
       (init-state [this]
                   {:channel (async/chan)
                    :selected nil
-                   :alarms [{:value 1200 :text "" :key 1}
-                            {:value 400 :text "" :key 2}]})
+                   :alarms [{:value 929 :text "" :key 1}
+                            {:value 530 :text "" :key 2}]
+                   :popular [{:value 729 :text "" :key 1}
+                            {:value 630 :text "" :key 2}]})
       om/IWillMount
       (will-mount [this]
            (go (while true
@@ -95,10 +110,14 @@
                     ))))
       om/IRenderState
       (render-state [this state]
-          (html [:div
+          (html [:div {:class (when (:selected state) "selected")}
                    [:h2 "When do you want to buy and sell?"]
+                   (om/build render-chart cursor)
                    [:div {:class "alarm-box"}
                      (map #(render-alarm % cursor owner state) (:alarms state))
-                    ]
+                     (map #(render-popular % cursor owner state) (:popular state))]
                    [:div.box-footer
-                     [:a.button "done"]]]))))
+                     [:a.button {:href "#"
+                                 :onClick (fn [] (om/transact! cursor #(assoc % :page "phoneconfirm")))} "done"]]]))))
+
+(def app-state (atom {:unused ""}))

@@ -2,8 +2,6 @@
   (:require [sablono.core :as html :refer-macros [html]]
             [om.core :as om :include-macros true]))
 
-(enable-console-print!)
-
 (def coins [{:name "Bitcoin/US Dollar"  :market "USD-BTC" }
             {:name "Dogecoin/US Dollar" :market "USD-DOGE" }
             {:name "Litecoin/US Dollar" :market "USD-LTC" }
@@ -74,4 +72,5 @@
                     (map #(html [:option {:value (:code %)} (:name %)]) (:markets state))]]
                      ;;(map #(render-alarm % cursor owner state) (:alarms state))]]))))
          [:div.box-footer
-           [:a.button {:onClick #(send-markets % state app owner)} "done"]]]))))
+           [:a.button {:href "#"
+                       :onClick #(send-markets % state app owner)} "done"]]]))))

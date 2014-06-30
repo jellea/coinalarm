@@ -1,6 +1,7 @@
 @import 'nib'
 
 green-color-1 = #41B972
+bounce-ease = cubic-bezier(.30,1.08,.18,1.08)
 
 *
   box-sizing border-box
@@ -37,7 +38,7 @@ input
   font-family Arvo, Helvetica, Arial, sans-serif
   font-size 0.8em
   padding 10px
-  border 2px green-color-1 solid
+  border 0px
   background-color #fff
   color #298A51
   outlinenone
@@ -49,7 +50,7 @@ input[type=submit]
 
 input[type=submit]hover
   background-color #298A51
-  border2px solid #298A51
+  border 0px
 
 .login
   position absolute
@@ -78,7 +79,7 @@ input[type=submit]hover
 .box
   background-color green-color-1
   border-radius 2px
-  transition all 0.3s ease-in-out
+  transition all 0.5s bounce-ease
 
   .box-footer
     background-color #fff
@@ -97,6 +98,52 @@ input[type=submit]hover
       padding 0.7em
       color #fff
       text-decoration none
+
+
+@keyframes modal-fade-in
+  from
+    opacity 0
+  to
+    opacity 0.7
+
+
+@keyframes modal-appear
+  from
+    transform translate(calc(50vw - 300px), calc(50vh - 200px)) scale(0)
+  to
+    transform translate(calc(50vw - 300px), calc(50vh - 200px)) scale(1)
+
+.modal
+  .greyout
+    position absolute
+    display block
+    width 100vw
+    height 100vh
+    opacity 0.7
+    top 0px
+    left 0px
+    background-color #111
+    z-index 1000
+    cursor pointer
+    animation modal-fade-in 1s bounce-ease
+
+  .container
+    color #222
+    padding 3em
+    position absolute
+    display block
+    width 600px
+    height 400px
+    z-index 1001
+    background-color #fff
+    animation modal-appear 0.5s bounce-ease
+    transform translate(calc(50vw - 300px), calc(50vh - 200px))
+
+  &.hide
+    .greyout
+      opacity 0
+    .container
+      transform translate(calc(50vw - 300px), calc(50vh - 200px)) scale(0)
 
 /* Pages */
 
@@ -139,7 +186,7 @@ input[type=submit]hover
       width 100%
       z-index -9
 
-.phoneform
+.phoneform, .phoneconfirm
   height 274px
   width 420px
   text-align center
@@ -166,15 +213,72 @@ input[type=submit]hover
   width 510px
   transform translate3d(calc(50vw - 305px),calc(50vh - 250px),0px)
 
+  < .selected
+    transform translate3d(calc(50vw - 405px),calc(50vh - 250px),0px)
+
   h2
     font-weight normal
     font-size 1.4em
     padding 1.5em
 
+  #chart
+    width 510px
+    overflow hidden
+
+    .alarm-line
+      padding 2px
+      background-color transparent
+
+      &:hover
+        stroke-width 3px
+        cursor move
+
   .alarm-box
-    position relative
+    position absolute
+    top 0
+    left 0
+    transform translate3d(525px,0px,0px)
 
   .alarm-cursor
     position absolute
+    white-space nowrap
+    line-height 1em
+    height 2em
     left 0
     top 0
+    padding 9px
+    border-radius 3px
+    background-color green-color-1
+    cursor move
+
+    &.popular
+      opacity 0.4
+      cursor initial
+      font-size 0.8em
+
+    *
+      line-height 1em
+      display inline
+      clear none
+      padding 0
+      margin 0 0 0 0
+
+    input
+      padding 2px
+
+    &::before
+      position absolute
+      display block
+      background-color green-color-1
+      width 10px
+      height 10px
+      font-family Arial
+      content " "
+      z-index -10
+      transform translate3d(-13px,1px,0px) rotate(45deg)
+
+.btcpay
+  height 440px
+  width 440px
+  text-align center
+  transform translate3d(calc(50vw - 220px),calc(50vh - 220px),0px)

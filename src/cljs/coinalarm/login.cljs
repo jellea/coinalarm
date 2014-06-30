@@ -1,4 +1,4 @@
-(ns coinalarm.phone
+(ns coinalarm.login
   (:require [sablono.core :as html :refer-macros [html]]
             [om.core :as om :include-macros true]))
 
@@ -36,7 +36,7 @@
     (render-state [this state]
       (html
         [:div
-          [:p "Fill in your phone number to receive text messages"]
+          [:p "Fill in your phone number"]
           ;; error message
           (when (:message state)
             [:div "Yo that's not a real phone number"])
@@ -44,6 +44,15 @@
                    :ref "phone-field"
                    :onChange #(handle-number % state owner)
                    :value (:number state)}]
+
+          [:p "Your code"]
+
+          [:input {:placeholder "000000000"
+                   :ref "code-field"
+                   :onChange #(handle-number % state owner)
+                   :value (:number state)}]
+
           [:div.box-footer
             [:a.button {:href "#"
                         :onClick #(send-number % state app owner)} "done"]]]))))
+
