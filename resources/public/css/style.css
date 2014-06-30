@@ -252,6 +252,13 @@ input[type=submit]hover {
   -ms-transform: translate3d(calc(50vw - 305px), calc(50vh - 250px), 0px);
   transform: translate3d(calc(50vw - 305px), calc(50vh - 250px), 0px);
 }
+.alarms < .selected {
+  -webkit-transform: translate3d(calc(50vw - 405px), calc(50vh - 250px), 0px);
+  -moz-transform: translate3d(calc(50vw - 405px), calc(50vh - 250px), 0px);
+  -o-transform: translate3d(calc(50vw - 405px), calc(50vh - 250px), 0px);
+  -ms-transform: translate3d(calc(50vw - 405px), calc(50vh - 250px), 0px);
+  transform: translate3d(calc(50vw - 405px), calc(50vh - 250px), 0px);
+}
 .alarms h2 {
   font-weight: normal;
   font-size: 1.4em;
