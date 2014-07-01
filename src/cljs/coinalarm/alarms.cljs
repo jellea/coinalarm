@@ -20,14 +20,15 @@
 (defn get-val-diff-from-y-diff [ypos]
   (* 3 ypos))
 
-(defn start-listen [cb]
+(defn start-listen [cb & [stop-cb]]
   ;; using .addEventListener instead of google events,
-  ;; since GE removes the almost universially (IE8) supported pageX
+  ;; since GE removes the almost universially (except IE8) supported pageX
 
   ;; listen for updated position
   (let [cancel (fn mouseup[e]
                  (.removeEventListener js/window "mousemove" cb)
-                 (.removeEventListener js/window "mouseup" mouseup))]
+                 (.removeEventListener js/window "mouseup" mouseup)
+                 (when stop-cb (stop-cb e)))]
     (.addEventListener js/window "mousemove" cb false)
     ;; listen for mouseup to cancel updated position
     (.addEventListener js/window "mouseup" cancel false)))
@@ -55,35 +56,43 @@
                         ;; we need to compare the diff from what the value was when first clicked
                         ;; understanding cursors is hard :(
                         start-val (:value alarm)
-                        selected (= alarm (:selected state))]
-                    (html [:div {:class (str "alarm-cursor " (when selected "selected"))
+                        selected (:selected state)]
+                    (html [:div {:class (str "alarm-cursor " (when selected "alarm-cursor-selected"))
                                  :data-selected selected
-                                 :style {:-webkit-transform (str "translateY(" (get-y-pos start-val) "px)") }
+                                 :style {:zIndex (if selected 1000 2) ;; z-index adds 'px' to the value WTF
+                                         :-webkit-transform (str "translateY(" (get-y-pos start-val) "px)")
+                                         :transform (str "translateY(" (get-y-pos start-val) "px)")}
                                  :key (:key alarm)
-                                 ;;:on-mouse-enter (fn [e] (om/set-state! owner :selected alarm))
-                                 ;;:on-mouse-leave (fn [e] (om/set-state! owner :selected nil))
-                                 :data-alarm (:value alarm)}
-
-                           [:div.alarm-flag {
-                                             :on-mouse-down (fn [e]
-                                                              ;; note that this event is a react synthetic event
-                                                              ;; those are not exactly the same as the ones
-                                                              ;; from google events or native events
-                                                              ;; react events documented here:
-                                                              ;; http://facebook.github.io/react/docs/events.html#mouse-events
-                                                              ;; doc for google mouse event:
-                                                              ;; http://docs.closure-library.googlecode.com/git/class_goog_events_BrowserEvent.html
-                                                              (let [origin {:pageX (.-pageX e) :pageY (.-pageY e)}]
-                                                                (start-listen (fn [e]
-                                                                                (let [new-val (new-alarm-value e origin start-val)]
-                                                                                  (om/transact! cursor :value (fn [x] new-val)))))))
-                                             } (str "$" (:value alarm))]
-
+                                 ;; dragging and 'selected' needs to work together
+                                 ;; if you're dragging, selected can not be unset, that causes flickering
+                                 :on-mouse-enter (fn [e] (om/set-state! owner :selected true))
+                                 :on-mouse-leave (fn [e]
+                                                   (when-not (om/get-state owner :dragging)
+                                                     (om/set-state! owner :selected false)))
+                                 :data-alarm (:value alarm)
+                                 :on-mouse-down (fn [e]
+                                    ;; note that this event is a react synthetic event
+                                    ;; those are not exactly the same as the ones
+                                    ;; from google events or native events
+                                    ;; react events documented here:
+                                    ;; http://facebook.github.io/react/docs/events.html#mouse-events
+                                    ;; doc for google mouse event:
+                                    ;; http://docs.closure-library.googlecode.com/git/class_goog_events_BrowserEvent.html
+                                    (om/set-state! owner :dragging true)
+                                    (let [origin {:pageX (.-pageX e) :pageY (.-pageY e)}]
+                                      (start-listen (fn [e]
+                                                      (let [new-val (new-alarm-value e origin start-val)]
+                                                        (om/transact! cursor :value (fn [x] new-val))))
+                                                     #(om/set-state! owner :dragging false))))}
+                           [:div.alarm-flag (str "$" start-val)]
                            (when selected
                              [:div.alarm-message
                               ;; TODO: get coin name
-                              [:img {:src "img/del.svg"}]
-                              [:input {:type "text" :placeholder (str "OMG [coin] reaches " (:value alarm))}]])])))))
+                              [:img {:src "img/del.svg"
+                                     :onClick (fn [e]
+                                                (async/put! (:delete-chan state) @cursor))
+                                     }]
+                              [:input {:type "text" :placeholder (str "OMG " (:coin state) " reaches " (:value alarm))}]])])))))
 
 (defn render-popular [alarm cursor owner state]
   [:div.alarm-cursor.popular {:style {:-webkit-transform (str "translateY(" (get-y-pos (:value alarm)) "px)") }}
@@ -103,8 +112,7 @@
                (for [alarm alarm-positions]
                  [:path.alarm-line {:d (horizontal-line alarm) :stroke "#FFFFFF" :strokeDasharray "3"}])
                (for [p popular-positions]
-                 [:path.alarm-line {:d (horizontal-line p) :stroke "#C7C7C7" :strokeDasharray "3"}])
-             ])))))
+                 [:path.alarm-line {:d (horizontal-line p) :stroke "#C7C7C7" :strokeDasharray "3"}])])))))
 
 (defn alarms-selector [cursor owner]
     (reify
@@ -127,7 +135,9 @@
                    (om/build render-chart cursor {:state {:alarms (:alarms cursor)
                                                           :popular (:popular state)}})
                    [:div.alarm-box
-                     (om/build-all alarm-pointer (:alarms cursor)  {:key :key :state {:delete-chan (:delete-chan state)}})
+                     (om/build-all alarm-pointer (:alarms cursor)  {:key :key
+                                                                    :state {:delete-chan (:delete-chan state)
+                                                                            :coin (-> cursor :coin (or "USD-BTC"))}})
                      (map #(render-popular % cursor owner state) (:popular state))]
                    [:div.box-footer
                      [:a.button {:href "#"
