@@ -13,6 +13,8 @@
 
 (def app-state (atom {:page "splashscreen"
                       :number ""
+                      :alarms [{:value 929 :text "" :key 1}
+                               {:value 530 :text "" :key 2}]
                       :modal nil}))
 
 (defn main-component [cursor owner]

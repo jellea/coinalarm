@@ -37,47 +37,57 @@
         diffY (- (:pageY origin) (.-pageY e))]
         [diffX diffY]))
 
-;; TODO: set bounds
-(defn update-alarm-value [e origin alarm channel]
+(defn new-alarm-value [e origin start-val]
   (let [[_ diff-y] (get-starting-diff e origin)
-        val-diff (get-val-diff-from-y-diff diff-y)
-        new-val (+ (:value alarm) val-diff)]
-    (async/put! channel [new-val alarm])))
+        val-diff (get-val-diff-from-y-diff diff-y)]
+    (+ start-val val-diff)))
 
-(defn render-alarm [alarm cursor owner state]
-  (let [selected (= alarm (:selected state))
-        channel (:channel state)]
-    [:div {:class (str "alarm-cursor " (when selected "selected"))
-           :data-selected selected
-           :style {:-webkit-transform (str "translateY(" (get-y-pos (:value alarm)) "px)") }
-           :key (:key alarm)
-           :on-click (fn [e] (om/set-state! owner :selected alarm))
-           :data-alarm (:value alarm)}
+(defn alarm-pointer [cursor owner]
+  (reify
+    om/IInitState
+    (init-state [_]
+                {:selected nil})
+    om/IRenderState
+    (render-state [_ state]
+                  (let [alarm cursor
+                        ;; this is tricky: since we're manipulating the cursor on drag,
+                        ;; i needed to pick out the start-value of the alarm,
+                        ;; we need to compare the diff from what the value was when first clicked
+                        ;; understanding cursors is hard :(
+                        start-val (:value alarm)
+                        selected (= alarm (:selected state))]
+                    (html [:div {:class (str "alarm-cursor " (when selected "selected"))
+                                 :data-selected selected
+                                 :style {:-webkit-transform (str "translateY(" (get-y-pos start-val) "px)") }
+                                 :key (:key alarm)
+                                 ;;:on-mouse-enter (fn [e] (om/set-state! owner :selected alarm))
+                                 ;;:on-mouse-leave (fn [e] (om/set-state! owner :selected nil))
+                                 :data-alarm (:value alarm)}
 
-       [:div.alarm-flag {
-              :on-mouse-down (fn [e]
-                               ;; note that this event is a react synthetic event
-                               ;; those are not exactly the same as the ones
-                               ;; from google events or native events
-                               ;; react events documented here:
-                               ;; http://facebook.github.io/react/docs/events.html#mouse-events
-                               ;; doc for google mouse event:
-                               ;; http://docs.closure-library.googlecode.com/git/class_goog_events_BrowserEvent.html
-                               (let [origin {:pageX (.-pageX e) :pageY (.-pageY e)}]
-                                 (start-listen #(update-alarm-value % origin alarm channel))))
-              } (str "$" (:value alarm))]
+                           [:div.alarm-flag {
+                                             :on-mouse-down (fn [e]
+                                                              ;; note that this event is a react synthetic event
+                                                              ;; those are not exactly the same as the ones
+                                                              ;; from google events or native events
+                                                              ;; react events documented here:
+                                                              ;; http://facebook.github.io/react/docs/events.html#mouse-events
+                                                              ;; doc for google mouse event:
+                                                              ;; http://docs.closure-library.googlecode.com/git/class_goog_events_BrowserEvent.html
+                                                              (let [origin {:pageX (.-pageX e) :pageY (.-pageY e)}]
+                                                                (start-listen (fn [e]
+                                                                                (let [new-val (new-alarm-value e origin start-val)]
+                                                                                  (om/transact! cursor :value (fn [x] new-val)))))))
+                                             } (str "$" (:value alarm))]
 
-         (when selected
-           [:div.alarm-message
-              ;; TODO: get coin name
-              [:img {:src "img/del.svg"}]
-              [:input {:type "text" :placeholder (str "OMG [coin] reaches " (:value alarm))}]])]))
+                           (when selected
+                             [:div.alarm-message
+                              ;; TODO: get coin name
+                              [:img {:src "img/del.svg"}]
+                              [:input {:type "text" :placeholder (str "OMG [coin] reaches " (:value alarm))}]])])))))
 
 (defn render-popular [alarm cursor owner state]
   [:div.alarm-cursor.popular {:style {:-webkit-transform (str "translateY(" (get-y-pos (:value alarm)) "px)") }}
-   [:div.alarm-flag (str "$" (:value alarm) " average buy/sell of CoinAlarm users")]])
-
-               [:path.alarm-line {:d "M517,187 L0,187" :stroke "#C7C7C7" :strokeDasharray "3"}]
+  [:div.alarm-flag (str "$" (:value alarm) " average buy/sell of CoinAlarm users")]])
 
 (defn horizontal-line [y-pos]
   (str "M517," y-pos " L0," y-pos))
@@ -88,7 +98,6 @@
     (render-state [_ state]
       (let [alarm-positions   (->> state :alarms (map :value) (map get-y-pos)) ;; 39, 239
             popular-positions (->> state :popular (map :value) (map get-y-pos))];; 187, 140
-      (println alarm-positions popular-positions)
       (html [:svg#chart
                [:path {:d "M0.5,108.5 L107.5,31.5 L239.242187,138.828125 L362.554688,61.8867188 L401.175781,133.253906 L518.119141,0.15234375" :stroke "#FF0000" :fill "none"}]
                (for [alarm alarm-positions]
@@ -101,30 +110,24 @@
     (reify
       om/IInitState
       (init-state [this]
-                  {:channel (async/chan)
+                  {:delete-chan (async/chan)
                    :selected nil
-                   :alarms [{:value 929 :text "" :key 1}
-                            {:value 530 :text "" :key 2}]
                    :popular [{:value 729 :text "" :key 1}
                             {:value 630 :text "" :key 2}]})
       om/IWillMount
       (will-mount [this]
            (go (while true
-                 (let [[value current] (async/<! (om/get-state owner :channel))
-                       alarms (->> (om/get-state owner :alarms)
-                                   (remove #(= (:key current) (:key %))))
-                       new-alarms (conj alarms (assoc current :value value))]
-                                ;;(println "update" new-alarms)
-                   (om/set-state! owner :alarms new-alarms)
-                    ))))
+                 (let [to-remove (async/<! (om/get-state owner :delete-chan))]
+                   (om/transact! cursor :alarms
+                                 (fn [alarms] (vec (remove #(= to-remove %) alarms))))))))
       om/IRenderState
       (render-state [this state]
-          (html [:div {:class (when (:selected state) "selected")}
+          (html [:div
                    [:h2 "When do you want to buy and sell?"]
-                   (om/build render-chart cursor {:state {:alarms (:alarms state)
+                   (om/build render-chart cursor {:state {:alarms (:alarms cursor)
                                                           :popular (:popular state)}})
-                   [:div {:class "alarm-box"}
-                     (map #(render-alarm % cursor owner state) (:alarms state))
+                   [:div.alarm-box
+                     (om/build-all alarm-pointer (:alarms cursor)  {:key :key :state {:delete-chan (:delete-chan state)}})
                      (map #(render-popular % cursor owner state) (:popular state))]
                    [:div.box-footer
                      [:a.button {:href "#"
