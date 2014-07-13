@@ -1,40 +1,85 @@
 (ns coinalarm.persistence
-  (:require [taoensso.carmine :as car :refer (wcar)]
-            [coinalarm.schemas :as schemas]))
+  (:require [korma.db :as kdb]
+            [korma.core :as k]
+            [clojure.java.jdbc.deprecated  :as j]))
 
-(def server1-conn {:pool {} :spec {}}) ; See `wcar` docstring for opts
+(def sqll (kdb/sqlite3 {:db "coinalarm-database"}))
 
-(defmacro wcar* [& body] `(car/wcar server1-conn ~@body))
+(kdb/defdb kpg sqll)
 
-;; USER
+(declare users alarms markets historical-data)
 
-;; TODO: Also delete the user, this only deletes our refeference
-(defn reset-users! []
-  (wcar* (car/set "users" [])))
+(k/defentity users
+  (k/has-many alarms {:fk :user_id}))
 
-(defn create-user! [user]
-  (let [users (wcar* (car/get "users"))
-        users (or users [])]
-  (wcar*
-   (car/set "users" (into [] (set (cons (:phone user) users)))) ;; improve
-   (car/set (:phone user) user))))
+(k/defentity alarms
+  (k/belongs-to users {:fk :user_id})
+  (k/belongs-to markets {:fk :market_name}))
 
-(defn update-user! [user]
-  (let [old-user (wcar* (car/get (:phone user)))
-        updated-user (merge old-user user)]
-  (wcar*
-   (car/set (:phone user) updated-user))))
+(k/defentity markets
+  (k/pk :name)
+  (k/has-many alarms)
+  (k/has-many historical-data))
 
-(defn get-user [phone]
-  (wcar* (car/get phone)))
+(k/defentity historical-data
+  (k/belongs-to markets))
 
-(defn get-all-user []
-  (let [users (wcar* (car/get "users"))]
-    (map #(wcar* (car/get %)) users)))
+(defn create-users []
+  (j/create-table
+   :users
+   [:id :integer "PRIMARY KEY" "AUTOINCREMENT"]
+   [:phone :integer "NOT NULL" "UNIQUE"])) ;; maybe this could also be the primary key
 
-;; HISTORICAL BTC DATA
+(defn create-alarms []
+  (j/create-table
+   :alarms
+   [:id :integer "PRIMARY KEY" "AUTOINCREMENT"]
+   [:user_id :integer "REFERENCES USERS (phone)"]
+   [:market_name :text "REFERENCES MARKETS (name)"]
+   [:amount :real "NOT NULL"]
+   [:up :integer]))
 
-(def max-number-h-btc 100) ;; limit the number of historical entries, we don't need that many
+(defn create-markets []
+  (j/create-table
+   :markets
+   [:name :text "PRIMARY KEY"]
+   [:currency :text "NOT NULL"]))
 
-(defn reset-h-btcs! []
-  (wcar* (car/set "h-btcs" [])))
+(defn create-historical-data []
+  (j/create-table
+   :historical_data
+   [:id :integer "PRIMARY KEY" "AUTOINCREMENT"]
+   [:trading_date :date "NOT NULL" "DEFAULT CURRENT_DATE"]
+   [:market_name :text "REFERENCES MARKETS (name)"]
+   [:high :real "NOT NULL"]
+   [:low :real "NOT NULL"]
+   [:close :real "NOT NULL"]
+   [:volume :integer "NOT NULL"]
+   [:avg :integer "NOT NULL"]
+   [:ask :real]
+   [:bid :real]))
+
+(defn invoke-with-connection [f]
+  (j/with-connection
+     sqll
+     (j/transaction
+       (f))))
+
+(defn create-tables []
+  (do (create-users)
+      (create-markets)
+      (create-alarms)
+      (create-historical-data)))
+
+(defn set-up! []
+  (invoke-with-connection create-tables))
+
+(set-up!)
+
+(k/insert users (k/values {:phone 1212312}))
+(k/select users)
+
+(k/insert markets (k/values {:name "test" :currency "EUR"}))
+(k/insert alarms (k/values {:user_id 1, :market_name "test", :amount 4.2, :up 0}))
+
+(k/select users (k/with alarms (k/with markets)))

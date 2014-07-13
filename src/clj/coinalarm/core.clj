@@ -4,7 +4,8 @@
             [ring.middleware.edn :refer [wrap-edn-params]]
             [compojure.core :refer [defroutes GET PUT]]
             [compojure.route :as route]
-            [compojure.handler :as handler]))
+            [compojure.handler :as handler]
+            [coinalarm.btc :as btc]))
 
 
 (defn index []
@@ -16,6 +17,7 @@
    :body (pr-str data)})
 
 (defroutes routes
+  (GET "/currency-markets" [] (generate-response btc/currency-markets))
   (GET "/" [] (index))
   (route/files "/" {:root "resources/public"}))
 

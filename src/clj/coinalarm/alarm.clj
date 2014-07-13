@@ -1,6 +1,7 @@
 (ns coinalarm.alarm
   (:require [coinalarm.btc :as btc]
             [coinalarm.persistence :as pers]
+            [korma.core :as k]
             [coinalarm.communication :as comm]
             [clojure.core.async :as async :refer [<! timeout chan go]]))
 
@@ -13,54 +14,32 @@
 (defn stop []
   (reset! running false))
 
-(defn create-sms-text [{:keys [subscription user]}]
-  (str "Hi user with number "
-       (:phone user)
-       ". The price on the market " (:symbol (:symbol subscription))
-       " is now with "
-       (-> subscription :symbol :price)
-       (-> subscription :symbol :currency)
-       " "
-       (if (:upper subscription) "higher" "lower")
-       " than " (:price subscription) (:currency subscription)
-       "."))
+(defn create-sms-text [{:keys [alarm user]}]
+  (str "Hi user with number "))
 
-(defn subscription-valid? [{:keys [price currency upper] :as subscription} latest-btc]
-  (let [symbol-price (-> latest-btc (get currency) (get (:symbol subscription)) :price)]
-    (and symbol-price ;; shouldn't happen -> symbol not in the latest fetch
-         (or
-          (and upper (< price symbol-price))
-          (and (not upper) (> price symbol-price))))))
+(defn alarm-valid? [{:keys [currency market_name amount up]} latest-btc]
+  (let [current-market (-> market_name currency latest-btc)
+        ask (:ask current-market)]
+    (or (and (> ask amount) (= up 1)) (and (< ask amount) (= up 0)))))
 
-(defn whom-to-send-sms [users latest-btc]
-  (let [users-with-filtered-subscriptions (map #(assoc %
-                                                  :subscriptions
-                                                  (for [sub (:subscriptions %)
-                                                        :when (subscription-valid? sub latest-btc)]
-                                                        (assoc ;; not sure if this is the right place to assoc the symbol
-                                                          sub :symbol
-                                                          (-> latest-btc (get (:currency sub)) (get (:symbol sub))))))
-                                               users)
-        filtered-users (filter (comp not-empty :subscriptions) users-with-filtered-subscriptions)]
-    filtered-users))
+;; (defn update [latest-btc]
+;;   (let [
+;;         users (k/select pers/users (k/with pers/alarms (k/with pers/markets)))
+;;         filtered-alarms (map (fn [{:keys [alarms] :as user}]
+;;                                (assoc user :alarms
+;;                                  (filter #(alarm-valid? % latest-btc) alarms))) users)
+;;         send-sms-to-users (map #(map (fn [alarm] (create-sms-text alarm %))
+;;                                      (:alarms %))
+;;                                filtered-alarms)
+;;         ]
+;;     send-sms-to-users))
 
 (defn update [latest-btc]
-  (let [users (pers/get-all-user)
-        delete-subscriptions (fn [updated-users]
-                               (let [user-hash (apply merge (map #(hash-map (:phone %) %) users))]
-                                 (doseq [user updated-users]
-                                   (pers/update-user! (assoc user
-                                                        :subscriptions
-                                                        (filter #(not (subscription-valid? % latest-btc))
-                                                                (:subscriptions (user-hash (:phone user)))))))))
-        send-sms-to-users (fn [users]
-                            (doseq [user users]
-                              (doseq [sub (:subscriptions user)]
-                                (print {:phone (:phone user)
-                                        :text (create-sms-text {:user user
-                                                                :subscription sub})}))))]
-    ((comp (juxt delete-subscriptions send-sms-to-users)
-           (partial whom-to-send-sms users)) latest-btc)))
+  ;; filter alarms
+  ;; send appropriate sms
+  ;; delete alarms for which we just send a sms (or just mark them as already send)
+  ;; include latest fatch into the historic-data-table
+  )
 
 (go
  (while (running?)
